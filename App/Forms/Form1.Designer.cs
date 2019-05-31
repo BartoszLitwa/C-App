@@ -36,8 +36,8 @@
             this.buttonRandomImages = new System.Windows.Forms.Button();
             this.buttonMenu = new System.Windows.Forms.Button();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.ucRandomImages1 = new App.UCRandomImages();
             this.capture1 = new App.Capture();
+            this.ucRandomImages1 = new App.UCRandomImages();
             this.LeftSideMenuPanel.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -113,15 +113,6 @@
             this.timer1.Interval = 10;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
-            // ucRandomImages1
-            // 
-            this.ucRandomImages1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("ucRandomImages1.BackgroundImage")));
-            this.ucRandomImages1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ucRandomImages1.Location = new System.Drawing.Point(40, 0);
-            this.ucRandomImages1.Name = "ucRandomImages1";
-            this.ucRandomImages1.Size = new System.Drawing.Size(760, 450);
-            this.ucRandomImages1.TabIndex = 1;
-            // 
             // capture1
             // 
             this.capture1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("capture1.BackgroundImage")));
@@ -130,6 +121,15 @@
             this.capture1.Name = "capture1";
             this.capture1.Size = new System.Drawing.Size(760, 450);
             this.capture1.TabIndex = 2;
+            // 
+            // ucRandomImages1
+            // 
+            this.ucRandomImages1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("ucRandomImages1.BackgroundImage")));
+            this.ucRandomImages1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ucRandomImages1.Location = new System.Drawing.Point(40, 0);
+            this.ucRandomImages1.Name = "ucRandomImages1";
+            this.ucRandomImages1.Size = new System.Drawing.Size(760, 450);
+            this.ucRandomImages1.TabIndex = 1;
             // 
             // Form1
             // 
@@ -142,6 +142,7 @@
             this.Controls.Add(this.LeftSideMenuPanel);
             this.Name = "Form1";
             this.Text = "Form1";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.LeftSideMenuPanel.ResumeLayout(false);
             this.ResumeLayout(false);
 

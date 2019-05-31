@@ -11,17 +11,41 @@ using System.Threading;
 using System.Drawing.Imaging;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Net.Sockets;
+using Microsoft.Expression.Encoder;
+using Microsoft.Expression.Encoder.Devices;
+using Microsoft.Expression.Encoder.ScreenCapture;
+using Microsoft.Expression.Encoder.Live;
+using System.Collections.ObjectModel;
+using Microsoft.Expression.Encoder.Profiles;
 
 namespace App
 {
     public partial class Capture : UserControl
     {
         public string filePath = "";
+        public string fileScreenCaptureName = "";
         public bool SaveImage = true;
         public int FPS = 30;
+        public bool CanRecord = true;
         public NetworkStream mainstream;
         public readonly TcpClient client = new TcpClient();
+        public ScreenCaptureJob job;
         public int portNumber;
+
+        EncoderDevice AudioDevices()
+        {
+            EncoderDevice foundDevice = null;
+            Collection<EncoderDevice> Devices = EncoderDevices.FindDevices(EncoderDeviceType.Audio);
+            try
+            {
+                foundDevice = Devices.First();
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show("Audio Device not found" + Devices[0].Name + ex.Message);
+            }
+            return foundDevice;
+        }
 
         public Capture()
         {
@@ -58,7 +82,7 @@ namespace App
         {
             using (SaveFileDialog file = new SaveFileDialog())
             {
-                file.Filter = "JPeg Image|*.jpg|Bitmap Image|*.bmp|Gif Image|*.gif";
+                file.Filter = "JPeg Image|*.jpg|Bitmap Image|*.bmp|Gif Image|*.gif|PNG Image|*.png";
                 file.Title = "Save an Image File";
                 if (file.ShowDialog() == DialogResult.OK && file.FileName != "")
                 {
@@ -79,6 +103,10 @@ namespace App
                             pictureBox1.Image.Save(fs,
                                System.Drawing.Imaging.ImageFormat.Gif);
                             break;
+                        case 4:
+                            pictureBox1.Image.Save(fs,
+                               System.Drawing.Imaging.ImageFormat.Png);
+                            break;
                     }
                     //filePath = file.;
                     //Bitmap bm = new Bitmap(pictureBox1.Image);
@@ -90,28 +118,39 @@ namespace App
 
         private void buttonRecord_Click(object sender, EventArgs e)
         {
-            Thread thread = new Thread(CaptureScreen);
-            thread.Start();
+            if (buttonRecord.Text.StartsWith("Record"))
+            {
+                StartRecording();
+                buttonRecord.Text = "Stop";
+            }
+            else if (job.Status == RecordStatus.Running)
+            {
+                job.Stop();
+                buttonRecord.Text = "Record";
+            }
         }
 
-        void CaptureScreen()
+        void StartRecording()
         {
-            double Frames = 1000 / FPS;
-            int i = (int)Math.Round(Frames);
-            while (true)
-            {
-                pictureBox1.Image = GrabScreen();
-                Thread.Sleep(i);
-            }
+            job = new ScreenCaptureJob();
+            System.Drawing.Size WorkingArea = SystemInformation.WorkingArea.Size;
+            Rectangle CaptureRect = new Rectangle(0, 0, WorkingArea.Width - (WorkingArea.Width % 4), WorkingArea.Height - (WorkingArea.Height % 4));
+
+            job.CaptureRectangle = CaptureRect;
+            job.ShowFlashingBoundary = true;
+            job.ShowCountdown = true;
+            job.CaptureMouseCursor = true;
+            job.AddAudioDeviceSource(AudioDevices());
+            job.OutputPath = Environment.CurrentDirectory;
+            //job.OutputScreenCaptureFileName = fileScreenCaptureName;
+            
+            job.Start();
+            //pictureBox1.Image = job.;
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
-            try
-            {
-                FPS = int.Parse(textBox1.Text);
-            }
-            catch(Exception ex) { }
+            fileScreenCaptureName = textBox1.Text;
         }
 
         private void buttonConnect_Click(object sender, EventArgs e)

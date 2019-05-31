@@ -7,6 +7,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using App.Informations;
+using Microsoft.Expression.Encoder;
+using Microsoft.Expression.Encoder.Devices;
+using Microsoft.Expression.Encoder.ScreenCapture;
+using Microsoft.Expression.Encoder.Live;
+using System.Collections.ObjectModel;
+using Microsoft.Expression.Encoder.Profiles;
 
 namespace App
 {
@@ -64,34 +71,21 @@ namespace App
 
         private void buttonRandomImages_Click(object sender, EventArgs e)
         {
-            if (OpenedRandomImages)
-            {
-                ucRandomImages1.Show();
-                capture1.Hide();
-                OpenedRandomImages = false;
-            }
-            else
-            {
-                ucRandomImages1.Hide();
-                capture1.Hide();
-                OpenedRandomImages = true;
-            }
+            ucRandomImages1.Show();
+            capture1.Hide();
         }
 
         private void buttonCapture_Click(object sender, EventArgs e)
         {
-            if (OpenedCapture)
-            {
-                ucRandomImages1.Hide();
-                capture1.Show();
-                OpenedCapture = false;
-            }
-            else
-            {
-                ucRandomImages1.Hide();
-                capture1.Hide();
-                OpenedCapture = true;
-            }
+            ucRandomImages1.Hide();
+            capture1.Show();
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Info.FormClosing = true;
+            if(capture1.job.Status == RecordStatus.Running)
+                capture1.job.Stop();
         }
     }
 }
