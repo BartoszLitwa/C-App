@@ -17,7 +17,7 @@ namespace App.Forms
     public partial class UCVideoPlayer : UserControl
     {
         public Video video;
-        public string[] videoPaths;
+        public List<string> videoPaths = new List<string>();
         public string folderPath = Environment.CurrentDirectory;
         public int selectedIndex;
         public Size formSize;
@@ -33,15 +33,15 @@ namespace App.Forms
             formSize = new Size(this.Width, this.Height);
             panelSize = new Size(PanelVideo.Width, PanelVideo.Height);
             OpenButton_Click(sender, e);
-            videoPaths = Directory.GetFiles(folderPath, "*.*", SearchOption.AllDirectories);
+            //videoPaths = Directory.GetFiles(folderPath, "*.*", SearchOption.AllDirectories);
             if (videoPaths != null)
             {
                 foreach (string pathh in videoPaths)
                 {
-                    if (Regex.IsMatch(pathh, @".wmv|.mp4|.mp3$"))
+                    if (Regex.IsMatch(pathh, @".wmv|.mp4|.MP4$"))
                     {
                         string vid = pathh.Replace(folderPath, string.Empty);
-                        vid = vid.Replace(@".wmv|.mp4|.mp3$", string.Empty);
+                        vid = vid.Replace(@".wmv|.mp4|.MP4$", string.Empty);
                         listBoxVideos.Items.Add(vid);
                     }
                 }
@@ -56,7 +56,7 @@ namespace App.Forms
                 video.Stop();
                 video.Dispose();
             }
-            catch(Exception ex) { }
+            catch (Exception ex) { }
 
             int index = listBoxVideos.SelectedIndex;
             selectedIndex = index;
@@ -91,7 +91,7 @@ namespace App.Forms
         {
             int index = listBoxVideos.SelectedIndex;
             index++;
-            if (index > videoPaths.Length - 1)
+            if (index > videoPaths.Count - 1)
             {
                 index = 0;
             }
@@ -103,9 +103,9 @@ namespace App.Forms
         {
             int index = listBoxVideos.SelectedIndex;
             index--;
-            if (index == - 1)
+            if (index == -1)
             {
-                index = videoPaths.Length - 1;
+                index = videoPaths.Count - 1;
             }
             selectedIndex = index;
             listBoxVideos.SelectedIndex = index;
@@ -124,7 +124,7 @@ namespace App.Forms
 
         private void buttonPlayPause_Click(object sender, EventArgs e)
         {
-            if(!video.Playing)
+            if (!video.Playing)
             {
                 video.Play();
                 timerVideo.Enabled = true;
@@ -182,9 +182,9 @@ namespace App.Forms
                     var files = Directory.GetFiles(folderPath, "*.*", SearchOption.AllDirectories);
                     foreach (string filename in files)
                     {
-                        if (Regex.IsMatch(filename, @".wmv|.mp4|.mp3$"))
+                        if (Regex.IsMatch(filename.ToLower(), @".wmv|.mp4|.MP4$"))
                         {
-                            videoPaths[cos] = filename;
+                            videoPaths.Add(filename);
                             cos++;
                         }
                     }

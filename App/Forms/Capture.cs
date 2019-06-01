@@ -56,7 +56,9 @@ namespace App
         {
             Rectangle bounds = Screen.PrimaryScreen.Bounds;
             Bitmap screenshot = new Bitmap(bounds.Width, bounds.Height, PixelFormat.Format32bppArgb);
+            
             Graphics g = Graphics.FromImage(screenshot);
+            
             g.CopyFromScreen(bounds.X, bounds.Y, 0, 0, bounds.Size,CopyPixelOperation.SourceCopy);
             return screenshot;
         }

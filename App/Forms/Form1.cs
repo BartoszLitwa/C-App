@@ -35,15 +35,17 @@ namespace App
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            try {
+            try
+            {
                 if (WindowSize != Form1.ActiveForm.Size)
                     WindowSize = Form1.ActiveForm.Size;
-            }catch(Exception ex) { }
+            }
+            catch (Exception ex) { }
         }
 
         private void buttonMenu_Click(object sender, EventArgs e)
         {
-            if(!OpenedLeftSideMenu)
+            if (!OpenedLeftSideMenu)
             {
                 //Buttons
                 buttonMenu.Size = ClosedmenuMainButtonSize;
@@ -73,19 +75,28 @@ namespace App
         {
             ucRandomImages1.Show();
             capture1.Hide();
+            ucVideoPlayer1.Hide();
         }
 
         private void buttonCapture_Click(object sender, EventArgs e)
         {
             ucRandomImages1.Hide();
             capture1.Show();
+            ucVideoPlayer1.Hide();
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             Info.FormClosing = true;
-            if(capture1.job.Status == RecordStatus.Running)
+            if (capture1.job.Status == RecordStatus.Running)
                 capture1.job.Stop();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            ucRandomImages1.Hide();
+            capture1.Hide();
+            ucVideoPlayer1.Show();
         }
     }
 }
